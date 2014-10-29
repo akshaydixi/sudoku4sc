@@ -65,4 +65,9 @@ class SudokuTest extends FlatSpec with ShouldMatchers {
     unsolvedBoard.blank.get should be ((0,5))
   }
 
+  "Sudoku" should "implement update properly" in {
+    emptyBoard.update((0,0), 9).board.head should be (Vector(9,0,0,0,0,0,0,0,0))
+    emptyBoard.update((8,8), 1).board.last should be (Vector(0,0,0,0,0,0,0,0,1))
+  }
+
 }

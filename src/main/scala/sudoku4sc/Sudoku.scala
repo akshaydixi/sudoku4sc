@@ -41,6 +41,12 @@ object Sudoku {
         Some(positions.head)
       }
     }
+
+    // Update a position in the Sudoku grid by returning a new updated Sudoku object
+    def update(position: Position, value: Int): Sudoku = {
+      new Sudoku(board.updated(position._1, board(position._1).updated(position._2, value)))
+    }
+
     // To show Sudoku boards cleanlyPosition
     override def toString: String = {
       val str = for (row <- board) yield row.mkString(" ")
@@ -53,6 +59,7 @@ object Sudoku {
     val blockWithoutZero = block.filter(_ > 0)
     blockWithoutZero.distinct == blockWithoutZero && block.length == 9
   }
+
 
 
   // Convert a Sudoku board into blocks -> 9 rows, 9 columns, 9 (3x3) blocks
