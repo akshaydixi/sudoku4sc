@@ -10,6 +10,7 @@ class SudokuTest extends FlatSpec with ShouldMatchers {
   val solvedBoard = new Sudoku("src/main/resources/solved1.csv")
   val emptyBoard = new Sudoku("src/main/resources/empty.csv")
   val disfiguredBoard = new Sudoku("src/main/resources/disfigured1.csv")
+  val repetitiveBoard = new Sudoku("src/main/resources/repetitive1.csv")
   val random = new Random(System.currentTimeMillis)
 
   def cell: Int = {
@@ -30,12 +31,14 @@ class SudokuTest extends FlatSpec with ShouldMatchers {
     unsolvedBoard.isSudoku should be (true)
     solvedBoard.isSudoku should be (true)
     disfiguredBoard.isSudoku should be (false)
+    repetitiveBoard.isSudoku should be (true)
     arbitrarySudoku.isSudoku should be (true)
   }
 
   "Sudoku" should "implement isSolved properly" in {
     unsolvedBoard.isSolved should be (false)
     solvedBoard.isSolved should be (true)
+    repetitiveBoard.isSolved should be (true)
   }
 
   "Sudoku" should "implement isValidBlock properly" in {
@@ -48,6 +51,18 @@ class SudokuTest extends FlatSpec with ShouldMatchers {
     toBlocks(solvedBoard.board).map(isValidBlock).reduce(_ & _) should be (true)
     toBlocks(unsolvedBoard.board).map(isValidBlock).reduce(_ & _) should be (true)
     toBlocks(disfiguredBoard.board).map(isValidBlock).reduce(_ & _) should be (false)
+  }
+
+  "Sudoku" should "implement isOkay properly" in {
+    solvedBoard.isOkay should be (true)
+    unsolvedBoard.isOkay should be (true)
+    disfiguredBoard.isOkay should be (false)
+    repetitiveBoard.isOkay should be (false)
+  }
+
+  "Sudoku" should "implement blank properly" in {
+    emptyBoard.blank.get should be ((0,0))
+    unsolvedBoard.blank.get should be ((0,5))
   }
 
 }

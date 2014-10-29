@@ -5,6 +5,7 @@ import scala.io.Source
 object Sudoku {
 
   type Block = Vector[Int]
+  type Position = (Int, Int)
 
   class Sudoku(val board: Vector[Vector[Int]], val blocks: Vector[Block]) {
     val ALL_INTS = Vector(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
@@ -19,14 +20,28 @@ object Sudoku {
     }
 
     // To check if a Sudoku board is valid
-    def isSudoku: Boolean = board.length == 9 && board.map(x => x.length == 9 && x.forall(ALL_INTS.contains(_))).reduce(_ & _)
+    def isSudoku: Boolean =
+      board.length == 9 && board.map(x => x.length == 9 && x.forall(ALL_INTS.contains(_))).reduce(_ & _)
 
     // To check if a Sudoku has been solved -> Simply check if there aren't any zeros
-    def isSolved: Boolean = {
+    def isSolved: Boolean =
       !board.map(_.contains(0)).reduce(_ | _)
-    }
 
-    // To show Sudoku boards cleanly
+
+    // To check if all the blocks in the Sudoku are valid
+    def isOkay: Boolean =
+      blocks.map(isValidBlock).reduce(_ & _)
+
+    // Returns a blank position in the current Sudoku grid
+    // Current Heuristic : Get the first blank in the row
+    def blank: Option[Position] = {
+      if (this.isSolved) None
+      else {
+        val positions = for (i <- 0 until board.length if board(i).contains(0)) yield (i, board(i).indexOf(0))
+        Some(positions.head)
+      }
+    }
+    // To show Sudoku boards cleanlyPosition
     override def toString: String = {
       val str = for (row <- board) yield row.mkString(" ")
       str.mkString("\n", "\n", "\n")
@@ -43,16 +58,12 @@ object Sudoku {
   // Convert a Sudoku board into blocks -> 9 rows, 9 columns, 9 (3x3) blocks
   def toBlocks(board: Vector[Vector[Int]]): Vector[Block] = {
     val rows = board
-    val cols = for( i <- 0 until board.length) yield board.map(_(i))
+    val cols = for (i <- 0 until board.length) yield board.map(_(i))
     val blocks = for {
       i <- 0 until board.length by 3
       j <- 0 until board.length by 3
-    } yield rows.slice(i,i+3).flatMap(_.slice(j,j+3))
+    } yield rows.slice(i, i + 3).flatMap(_.slice(j, j + 3))
     rows ++ cols ++ blocks
   }
-
-
-
-
 }
 
