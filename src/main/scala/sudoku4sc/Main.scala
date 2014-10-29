@@ -1,5 +1,7 @@
 package sudoku4sc
 
+import sudoku4sc.Sudoku._
+
 object Main extends App {
 
   def allBlankSudoku: Sudoku = {

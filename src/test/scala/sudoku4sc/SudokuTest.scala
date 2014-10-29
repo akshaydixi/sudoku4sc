@@ -3,6 +3,7 @@ package sudoku4sc
 import org.scalatest.FlatSpec
 import org.scalatest.matchers.ShouldMatchers
 import scala.util.Random
+import sudoku4sc.Sudoku._
 
 class SudokuTest extends FlatSpec with ShouldMatchers {
   val unsolvedBoard = new Sudoku("src/main/resources/unsolved1.csv")
@@ -38,9 +39,15 @@ class SudokuTest extends FlatSpec with ShouldMatchers {
   }
 
   "Sudoku" should "implement isValidBlock properly" in {
-    solvedBoard.isValidBlock(solvedBoard.board.head) should be (true)
-    unsolvedBoard.isValidBlock(unsolvedBoard.board.head) should be (true)
-    emptyBoard.isValidBlock(Vector(1,2,1,1,2,3,4,5,6)) should be (false)
+    isValidBlock(solvedBoard.board.head) should be (true)
+    isValidBlock(unsolvedBoard.board.head) should be (true)
+    isValidBlock(Vector(1,2,1,1,2,3,4,5,6)) should be (false)
+  }
+
+  "Sudoku" should "implement toBlocks properly" in {
+    toBlocks(solvedBoard.board).map(isValidBlock).reduce(_ & _) should be (true)
+    toBlocks(unsolvedBoard.board).map(isValidBlock).reduce(_ & _) should be (true)
+    toBlocks(disfiguredBoard.board).map(isValidBlock).reduce(_ & _) should be (false)
   }
 
 }
