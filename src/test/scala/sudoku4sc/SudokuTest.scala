@@ -26,6 +26,7 @@ class SudokuTest extends FlatSpec with ShouldMatchers {
 
   "Sudoku" should "read from csv files properly" in {
     emptyBoard.board should be (Main.allBlankSudoku.board)
+    solvedBoard.board should be (Main.solvedSudoku.board)
   }
 
   "Sudoku" should "implement isSudoku properly" in {

@@ -1,6 +1,7 @@
 package sudoku4sc
 
 import scala.io.Source
+import scalax.io._
 
 object Sudoku {
 
@@ -16,35 +17,51 @@ object Sudoku {
 
     // Constructor to read a Sudoku board from a CSV file
     def this(fileName: String) {
-      this(Source.fromFile(fileName).getLines().toVector.map(line => line.split(',').map(x => x.toInt).toVector))
+      this(Source
+            .fromFile(fileName)
+            .getLines()
+            .toVector
+            .map(line => line.split(',')
+            .map(x => x.toInt).toVector))
     }
 
-    // To check if a Sudoku board is valid
+    // To check if a Sudoku board is valid -> All rows are of length '9' and all elements are between 0 and 9 inclusive
     def isSudoku: Boolean =
-      board.length == 9 && board.map(x => x.length == 9 && x.forall(ALL_INTS.contains(_))).reduce(_ & _)
+      board.length == 9 &&
+      board
+        .map(x => x.length == 9 && x.forall(ALL_INTS.contains(_)))
+        .reduce(_ & _)
 
     // To check if a Sudoku has been solved -> Simply check if there aren't any zeros
     def isSolved: Boolean =
-      !board.map(_.contains(0)).reduce(_ | _)
+      !board
+        .map(_.contains(0))
+        .reduce(_ | _)
 
 
     // To check if all the blocks in the Sudoku are valid
     def isOkay: Boolean =
-      blocks.map(isValidBlock).reduce(_ & _)
+      blocks
+        .map(isValidBlock)
+        .reduce(_ & _)
 
     // Returns a blank position in the current Sudoku grid
     // Current Heuristic : Get the first blank in the row
     def blank: Option[Position] = {
       if (this.isSolved) None
       else {
-        val positions = for (i <- 0 until board.length if board(i).contains(0)) yield (i, board(i).indexOf(0))
+        val positions =
+          for (i <- 0 until board.length if board(i).contains(0))
+          yield (i, board(i).indexOf(0))
         Some(positions.head)
       }
     }
 
     // Update a position in the Sudoku grid by returning a new updated Sudoku object
     def update(position: Position, value: Int): Sudoku = {
-      new Sudoku(board.updated(position._1, board(position._1).updated(position._2, value)))
+      new Sudoku(board
+                  .updated(position._1, board(position._1)
+                                          .updated(position._2, value)))
     }
 
     // Tries to output a solved Sudoku board from the original one
@@ -88,5 +105,16 @@ object Sudoku {
     } yield rows.slice(i, i + 3).flatMap(_.slice(j, j + 3))
     rows ++ cols ++ blocks
   }
+
+  // Takes an input Sudoku CSV file and tries to solve it and outputs the attempt to given output path
+  def solveFromFile(inputFile: String, outputFile: String) = {
+    val result = new Sudoku(inputFile).solve match {
+      case None => "Could not solve"
+      case sud: Some[Sudoku] => sud.get.toString
+    }
+    val output = Resource.fromFile(outputFile)
+    output.write(result)
+  }
+
 }
 
