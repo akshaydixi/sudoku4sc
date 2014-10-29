@@ -3,9 +3,6 @@ package sudoku4sc
 import scala.io.Source
 
 class Sudoku(val board: Vector[Vector[Int]]) {
-  def this() {
-    this(Vector.fill(9, 9)(0))
-  }
 
   def this(fileName: String) {
     this(Source.fromFile(fileName).getLines().toVector.map(line => line.split(',').map(x => x.toInt).toVector))
@@ -18,8 +15,8 @@ class Sudoku(val board: Vector[Vector[Int]]) {
 
   override def toString: String = {
     val str = for (row <- board) yield row.mkString(" ")
-    str.mkString("\n")
+    str.mkString("\n", "\n", "\n")
   }
-
-
 }
+
+
