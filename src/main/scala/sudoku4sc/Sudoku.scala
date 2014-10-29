@@ -47,6 +47,22 @@ object Sudoku {
       new Sudoku(board.updated(position._1, board(position._1).updated(position._2, value)))
     }
 
+    // Tries to output a solved Sudoku board from the original one
+    // Brute backtracking algorithm implementation
+    def solve: Option[Sudoku] = {
+      if (this.isSolved && this.isOkay) Some(this)
+      else {
+        this.blank match {
+          case None =>  None
+          case pos: Some[Position] =>
+            val solutions = (for (i <- 1 to 9 ) yield update(pos.get, i)).filter(_.isOkay)
+            lazy val completeSolutions = (for (solution <- solutions) yield solution.solve).filter(_.isInstanceOf[Some[Sudoku]])
+            if (completeSolutions.length > 0) completeSolutions.head
+            else None
+        }
+      }
+    }
+
     // To show Sudoku boards cleanlyPosition
     override def toString: String = {
       val str = for (row <- board) yield row.mkString(" ")

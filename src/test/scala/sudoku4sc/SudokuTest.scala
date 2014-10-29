@@ -11,6 +11,7 @@ class SudokuTest extends FlatSpec with ShouldMatchers {
   val emptyBoard = new Sudoku("src/main/resources/empty.csv")
   val disfiguredBoard = new Sudoku("src/main/resources/disfigured1.csv")
   val repetitiveBoard = new Sudoku("src/main/resources/repetitive1.csv")
+  val impossibleBoard = new Sudoku("src/main/resources/impossible1.csv")
   val random = new Random(System.currentTimeMillis)
 
   def cell: Int = {
@@ -68,6 +69,11 @@ class SudokuTest extends FlatSpec with ShouldMatchers {
   "Sudoku" should "implement update properly" in {
     emptyBoard.update((0,0), 9).board.head should be (Vector(9,0,0,0,0,0,0,0,0))
     emptyBoard.update((8,8), 1).board.last should be (Vector(0,0,0,0,0,0,0,0,1))
+  }
+
+  "Sudoku" should "implement solve properly" in {
+    unsolvedBoard.solve.get.board should equal (solvedBoard.board)
+    impossibleBoard.solve should be (None)
   }
 
 }
