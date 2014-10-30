@@ -29,21 +29,18 @@ object Sudoku {
     def isSudoku: Boolean =
       board.length == 9 &&
       board
-        .map(x => x.length == 9 && x.forall(ALL_INTS.contains(_)))
-        .reduce(_ & _)
+        .forall(x => x.length == 9 && x.forall(ALL_INTS.contains(_)))
 
     // To check if a Sudoku has been solved -> Simply check if there aren't any zeros
     def isSolved: Boolean =
       !board
-        .map(_.contains(0))
-        .reduce(_ | _)
+        .exists(_.contains(0))
 
 
     // To check if all the blocks in the Sudoku are valid
     def isOkay: Boolean =
       blocks
-        .map(isValidBlock)
-        .reduce(_ & _)
+        .forall(isValidBlock)
 
     // Returns a blank position in the current Sudoku grid
     // Current Heuristic : Get the first blank in the row
