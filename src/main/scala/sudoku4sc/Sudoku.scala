@@ -68,8 +68,8 @@ object Sudoku {
       else {
         this.blank match {
           case None =>  None
-          case pos: Some[Position] =>
-            val solutions = (for (i <- 1 to 9 ) yield update(pos.get, i)).filter(_.isOkay)
+          case Some(pos) =>
+            val solutions = (for (i <- 1 to 9 ) yield update(pos, i)).filter(_.isOkay)
             lazy val completeSolutions = (for (solution <- solutions) yield solution.solve).filter(_.isInstanceOf[Some[Sudoku]])
             if (completeSolutions.length > 0) completeSolutions.head
             else None
@@ -107,7 +107,7 @@ object Sudoku {
   def solveFromFile(inputFile: String, outputFile: String) = {
     val result = new Sudoku(inputFile).solve match {
       case None => "Could not solve"
-      case sud: Some[Sudoku] => sud.get.toString
+      case Some(sud) => sud.toString
     }
     val output = Resource.fromFile(outputFile)
     output.write(result)
