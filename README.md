@@ -1,5 +1,6 @@
 sudoku4sc
 ---------
+[![Build Status](https://travis-ci.org/akshaydixi/sudoku4sc.svg?branch=master)](https://travis-ci.org/akshaydixi/sudoku4sc)
 
 sudoku4sc currently supports Sudoku boards of the form
 ```
